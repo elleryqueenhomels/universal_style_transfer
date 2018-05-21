@@ -87,3 +87,20 @@ def save_images(datas, contents_path, styles_path, save_dir):
 
             imsave(save_path, data)
 
+
+def save_single_image(data, input_path, output_dir, prefix=None, suffix='-reconstruct'):
+    if not exists(output_dir):
+        mkdir(output_dir)
+
+    name, ext = splitext(input_path)
+    name = name.split(sep)[-1]
+
+    if prefix != None:
+        name = prefix + name
+    if suffix != None:
+        name = name + suffix
+
+    output_path = join(output_dir, '%s.%s' % (name, ext))
+
+    imsave(output_path, data)
+

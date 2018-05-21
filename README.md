@@ -1,2 +1,5 @@
-# universal_style_transfer
-Universal Neural Style Transfer with Arbitrary Style using Multi-level stylization - Based on Li et al. "Universal Style Transfer via Feature Transforms"
+# Universal Style Transfer
+
+A universal fast neural style transfer method -- archieve style generalization, high visual quality and computational efficiency.
+
+## Still under-development

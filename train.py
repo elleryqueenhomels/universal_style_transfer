@@ -121,6 +121,14 @@ def train(training_imgs_paths, encoder_weights_path, model_save_path, debug=Fals
                                 print('feature loss: %.3f' % (_feature_loss))
                                 print('total   loss: %.3f' % (_loss))
                                 print('\n')
+
+                # finish training current decoder, save the model
+                saver.save(sess, '%s_%d' % (model_save_path, autoencoder_id), global_step=step)
+
+                if debug:
+                    elapsed_time = datetime.now() - start_time
+                    print('>>> Successfully training decoder_%d! Elapsed time: %s\n' % (autoencoder_id, elapsed_time))
+
             except:
                 saver.save(sess, '%s_%d' % (model_save_path, autoencoder_id), global_step=step)
                 print('\nSomething wrong happens! Current model is saved with current step: %d\n' % step)

@@ -13,10 +13,14 @@ TEST_IMG_DIR = 'test/input'
 OUTPUT_DIR = 'test/output'
 
 
-def main(autoencoder_id, model_save_suffix):
+def test_autoencoder(autoencoder_id, model_save_suffix):
     
     input_imgs_paths = list_images(TEST_IMG_DIR)
-    model_save_path  = '%s_%d-%s' % (MODEL_SAVE_PATH, autoencoder_id, model_save_suffix)
+
+    if model_save_suffix == '-done':
+        model_save_path  = '%s-done' % MODEL_SAVE_PATH
+    else:
+        model_save_path  = '%s_%d-%s' % (MODEL_SAVE_PATH, autoencoder_id, model_save_suffix)
 
     with tf.Graph().as_default(), tf.Session() as sess:
         input_img = tf.placeholder(
@@ -39,12 +43,20 @@ def main(autoencoder_id, model_save_suffix):
 
             out = sess.run(output_img, feed_dict={input_img: img})
 
-            save_single_image(out[0], input_img_path, OUTPUT_DIR)
+            save_single_image(out[0], input_img_path, OUTPUT_DIR, 
+                prefix='%d-' % autoencoder_id)
+
+
+def main():
+    for autoencoder_id in range(1, 6):
+        
+        print('\n>>> Begin to test AutoEncoder_%d' % autoencoder_id)
+        
+        test_autoencoder(autoencoder_id, '-done')
+
+    print('\n>>>>> Test finished!\n')
 
 
 if __name__ == '__main__':
-
-    main(5, 20000)
-
-    print("\n>>>>> Test finished!\n")
+    main()
 

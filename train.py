@@ -83,8 +83,8 @@ def train(training_imgs_paths, encoder_weights_path, model_save_path, debug=Fals
 
             if debug:
                 elapsed_time = datetime.now() - start_time
-                print('\nElapsed time for preprocessing before actually train the model: %s' % elapsed_time)
-                print('Now begin to train the model...\n')
+                print('\nElapsed time for preprocessing before actually train the Decoder_%d: %s' % (autoencoder_id, elapsed_time))
+                print('Now begin to train the Decoder_%d...\n' % autoencoder_id)
                 start_time = datetime.now()
 
             try:

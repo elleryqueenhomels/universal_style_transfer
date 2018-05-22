@@ -2,6 +2,7 @@
 
 import tensorflow as tf
 
+from style_transfer_net import StyleTransferNet
 from utils import get_images, save_images
 
 
@@ -23,6 +24,8 @@ def stylize(contents_path, styles_path, output_dir,
         stn = StyleTransferNet(encoder_path)
 
         output_image = stn.transform(content, style, style_ratio)
+
+        sess.run(tf.global_variables_initializer())
 
         # restore the trained model and run the style transferring
         saver = tf.train.Saver(var_list=tf.trainable_variables())

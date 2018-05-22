@@ -23,14 +23,17 @@ def test_autoencoder(autoencoder_id, model_save_suffix):
         model_save_path  = '%s_%d-%s' % (MODEL_SAVE_PATH, autoencoder_id, model_save_suffix)
 
     with tf.Graph().as_default(), tf.Session() as sess:
+
+        autoencoder_index = 5 - autoencoder_id
+
         input_img = tf.placeholder(
             tf.float32, shape=(1, None, None, 3), name='input_img')
 
         stn = StyleTransferNet(ENCODER_WEIGHTS_PATH)
 
-        input_enc = stn.encoders[autoencoder_id - 1].encode(input_img)
+        input_enc = stn.encoders[autoencoder_index].encode(input_img)
 
-        output_img = stn.decoders[autoencoder_id - 1].decode(input_enc)
+        output_img = stn.decoders[autoencoder_index].decode(input_enc)
 
         sess.run(tf.global_variables_initializer())
 

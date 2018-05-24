@@ -13,27 +13,20 @@ TEST_IMG_DIR = 'test/input'
 OUTPUT_DIR = 'test/output'
 
 
-def test_autoencoder(autoencoder_id, model_save_suffix):
+def test_autoencoder(autoencoder_ids, model_save_path):
     
     input_imgs_paths = list_images(TEST_IMG_DIR)
 
-    if model_save_suffix == '-done':
-        model_save_path  = '%s-done' % MODEL_SAVE_PATH
-    else:
-        model_save_path  = '%s_%d-%s' % (MODEL_SAVE_PATH, autoencoder_id, model_save_suffix)
-
     with tf.Graph().as_default(), tf.Session() as sess:
-
-        autoencoder_index = 5 - autoencoder_id
 
         input_img = tf.placeholder(
             tf.float32, shape=(1, None, None, 3), name='input_img')
 
         stn = StyleTransferNet(ENCODER_WEIGHTS_PATH)
 
-        input_enc = stn.encoders[autoencoder_index].encode(input_img)
+        input_encs = [encoder.encode(input_img) for encoder in stn.encoders]
 
-        output_img = stn.decoders[autoencoder_index].decode(input_enc)
+        output_imgs = [decoder.decode(input_enc) for decoder, input_enc in zip(stn.decoders, input_encs)]
 
         sess.run(tf.global_variables_initializer())
 
@@ -42,22 +35,25 @@ def test_autoencoder(autoencoder_id, model_save_suffix):
         saver.restore(sess, model_save_path)
 
         for input_img_path in input_imgs_paths:
+
             img = get_images(input_img_path)
 
-            out = sess.run(output_img, feed_dict={input_img: img})
+            for autoencoder_id in autoencoder_ids:
 
-            save_single_image(out[0], input_img_path, OUTPUT_DIR, 
-                prefix='%d-' % autoencoder_id)
+                index = 5 - autoencoder_id
+                out = sess.run(output_imgs[index], feed_dict={input_img: img})
+
+                prefix = '%d-' % autoencoder_id
+                save_single_image(out[0], input_img_path, OUTPUT_DIR, prefix=prefix)
 
 
 def main():
-    for autoencoder_id in range(1, 6):
-        
-        print('\n>>> Begin to test AutoEncoder_%d' % autoencoder_id)
-        
-        test_autoencoder(autoencoder_id, '-done')
+    autoencoder_ids = list(range(1, 6))
+    model_save_path = MODEL_SAVE_PATH + '-done'
 
-    print('\n>>>>> Test finished!\n')
+    test_autoencoder(autoencoder_ids, model_save_path)
+
+    print('\n>>>>> Testing all done!\n')
 
 
 if __name__ == '__main__':

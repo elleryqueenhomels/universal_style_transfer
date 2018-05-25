@@ -37,7 +37,7 @@ def main():
               logging_period=LOGGING_PERIOD)
 
         
-        print('\n>>>>>> Successfully! Done training...\n')
+        print('\n>>>>>> Successfully done training...\n')
 
     else:
 
@@ -52,7 +52,7 @@ def main():
                 model_path, 
                 style_ratio=STYLE_RATIO)
 
-        print('\n>>>>>> Successfully! Done stylizing...\n')
+        print('\n>>>>>> Successfully done stylizing...\n')
 
 
 if __name__ == '__main__':

@@ -33,8 +33,11 @@ def stylize(contents_path, styles_path, output_dir,
 
         outputs = []
         for content_path in contents_path:
+
+            content_img = get_images(content_path)
+
             for style_path in styles_path:
-                content_img = get_images(content_path)
+
                 style_img   = get_images(style_path)
 
                 result = sess.run(output_image, 

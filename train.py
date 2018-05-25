@@ -21,6 +21,8 @@ EPOCHS = 2
 EPSILON = 1e-5
 BATCH_SIZE = 8
 LEARNING_RATE = 1e-4
+LR_DECAY_RATE = 5e-5
+DECAY_STEPS = 1.0
 
 
 def train(training_imgs_paths, encoder_weights_path, model_save_path, debug=False, logging_period=100):
@@ -71,9 +73,12 @@ def train(training_imgs_paths, encoder_weights_path, model_save_path, debug=Fals
             total_loss = PIXEL_LOSS_WEIGHT * pixel_loss + FEATURE_LOSS_WEIGHT * feature_loss
 
             # Training step
-            trainer = tf.train.AdamOptimizer(LEARNING_RATE)
-            train_op = trainer.minimize(total_loss)
+            global_step = tf.Variable(0, trainable=False)
+            learning_rate = tf.train.inverse_time_decay(LEARNING_RATE, global_step, DECAY_STEPS, LR_DECAY_RATE)
+            trainer = tf.train.AdamOptimizer(learning_rate)
+            train_op = trainer.minimize(total_loss, global_step=global_step)
             trainer_initializers = [var.initializer for var in trainer.variables()]
+            trainer_initializers.append(global_step.initializer)
 
             sess.run(trainer_initializers)
 

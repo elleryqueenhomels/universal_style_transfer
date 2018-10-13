@@ -61,6 +61,8 @@ class Encoder(object):
         # preprocess(centralize) image
         out = preprocess(out)
 
+        features = []
+
         for layer in ENCODER_LAYERS:
             kind = layer[:4]
 
@@ -71,6 +73,7 @@ class Encoder(object):
 
             elif kind == 'relu':
                 out = tf.nn.relu(out)
+                features.append(out)
 
             elif kind == 'pool':
                 out = pool2d(out)
@@ -78,7 +81,7 @@ class Encoder(object):
             if layer == self.output_layer:
                 break
 
-        return out
+        return out, features
 
 
 def preprocess(image, mode='BGR'):

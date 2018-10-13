@@ -59,15 +59,17 @@ def train(training_imgs_paths, encoder_weights_path, model_save_path, debug=Fals
             input_imgs = tf.placeholder(tf.float32, shape=INPUT_SHAPE, name='input_imgs_%d' % autoencoder_id)
 
             # logic: input_img -> encode() -> img_features -> decode() -> output_img
-            input_features = encoder.encode(input_imgs)
-            output_imgs = decoder.decode(input_features)
-            output_features = encoder.encode(output_imgs)
+            input_encs, input_features = encoder.encode(input_imgs)
+            output_imgs = decoder.decode(input_encs)
+            output_encs, output_features = encoder.encode(output_imgs)
 
             # compute the pixel loss
             pixel_loss = tf.losses.mean_squared_error(input_imgs, output_imgs)
 
             # compute the feature loss
-            feature_loss = tf.losses.mean_squared_error(input_features, output_features)
+            feature_loss = tf.reduce_sum([
+                tf.losses.mean_squared_error(input_feat, output_feat) for input_feat, output_feat in zip(input_features, output_features)
+            ])
 
             # total loss
             total_loss = PIXEL_LOSS_WEIGHT * pixel_loss + FEATURE_LOSS_WEIGHT * feature_loss

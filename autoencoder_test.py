@@ -24,7 +24,7 @@ def test_autoencoder(autoencoder_ids, model_save_path):
 
         stn = StyleTransferNet(ENCODER_WEIGHTS_PATH)
 
-        input_encs = [encoder.encode(input_img) for encoder in stn.encoders]
+        input_encs = [encoder.encode(input_img)[0] for encoder in stn.encoders]
 
         output_imgs = [decoder.decode(input_enc) for decoder, input_enc in zip(stn.decoders, input_encs)]
 

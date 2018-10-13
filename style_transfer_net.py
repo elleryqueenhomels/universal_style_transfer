@@ -72,8 +72,8 @@ class StyleTransferNet(object):
         output = content
 
         for enc, dec in zip(self.encoders, self.decoders):
-            content_enc = enc.encode(output)
-            style_enc   = enc.encode(style)
+            content_enc, _ = enc.encode(output)
+            style_enc, _   = enc.encode(style)
 
             synthesis = self._wct(content_enc, style_enc, style_ratio)
 

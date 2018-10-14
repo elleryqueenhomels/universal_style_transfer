@@ -66,18 +66,19 @@ class StyleTransferNet(object):
             self.encoders.append(Encoder(encoder_weights_path, autoencoder[0]))
             self.decoders.append(Decoder(autoencoder[1]))
 
-    def transform(self, content, style, style_ratio):
+    def transform(self, content, style, style_ratio, repeat_pipeline=1):
         # assume the shape of content and style both are 1xHxWxC
 
         output = content
 
-        for enc, dec in zip(self.encoders, self.decoders):
-            content_enc, _ = enc.encode(output)
-            style_enc, _   = enc.encode(style)
+        for _ in range(repeat_pipeline):
+            for enc, dec in zip(self.encoders, self.decoders):
+                content_enc, _ = enc.encode(output)
+                style_enc, _   = enc.encode(style)
 
-            synthesis = self._wct(content_enc, style_enc, style_ratio)
+                synthesis = self._wct(content_enc, style_enc, style_ratio)
 
-            output = dec.decode(synthesis)
+                output = dec.decode(synthesis)
 
         return output
 

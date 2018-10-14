@@ -6,8 +6,8 @@ from style_transfer_net import StyleTransferNet
 from utils import get_images, save_images
 
 
-def stylize(contents_path, styles_path, output_dir, 
-        encoder_path, model_path, style_ratio=0.6):
+def stylize(contents_path, styles_path, output_dir, encoder_path, 
+    model_path, style_ratio=0.6, repeat_pipeline=1):
 
     if isinstance(contents_path, str):
         contents_path = [contents_path]
@@ -23,7 +23,7 @@ def stylize(contents_path, styles_path, output_dir,
 
         stn = StyleTransferNet(encoder_path)
 
-        output_image = stn.transform(content, style, style_ratio)
+        output_image = stn.transform(content, style, style_ratio, repeat_pipeline)
 
         sess.run(tf.global_variables_initializer())
 

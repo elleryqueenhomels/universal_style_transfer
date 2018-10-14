@@ -22,12 +22,12 @@ CONTENTS_DIR = 'images/content'
 STYLES_DIR = 'images/style'
 OUTPUT_DIR = 'output'
 STYLE_RATIO = 0.6
+REPEAT_PIPELINE = 1
 
 
 def main():
 
     if IS_TRAINING:
-
         training_imgs_paths = list_images(TRAINING_IMGS_PATH)
 
         train(training_imgs_paths,
@@ -40,7 +40,6 @@ def main():
         print('\n>>>>>> Successfully done training...\n')
 
     else:
-
         contents_path = list_images(CONTENTS_DIR)
         styles_path = list_images(STYLES_DIR)
         model_path = MODEL_SAVE_PATH + MODEL_SAVE_SUFFIX
@@ -50,7 +49,8 @@ def main():
                 OUTPUT_DIR, 
                 ENCODER_WEIGHTS_PATH, 
                 model_path, 
-                style_ratio=STYLE_RATIO)
+                style_ratio=STYLE_RATIO,
+                repeat_pipeline=REPEAT_PIPELINE)
 
         print('\n>>>>>> Successfully done stylizing...\n')
 

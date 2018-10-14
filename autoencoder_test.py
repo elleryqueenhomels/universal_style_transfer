@@ -13,7 +13,7 @@ TEST_IMG_DIR = 'test/input'
 OUTPUT_DIR = 'test/output'
 
 
-def test_autoencoder(autoencoder_ids, model_save_path):
+def test_autoencoder(autoencoder_levels, model_save_path):
     
     input_imgs_paths = list_images(TEST_IMG_DIR)
 
@@ -22,7 +22,7 @@ def test_autoencoder(autoencoder_ids, model_save_path):
         input_img = tf.placeholder(
             tf.float32, shape=(1, None, None, 3), name='input_img')
 
-        stn = StyleTransferNet(ENCODER_WEIGHTS_PATH)
+        stn = StyleTransferNet(ENCODER_WEIGHTS_PATH, autoencoder_levels)
 
         input_encs = [encoder.encode(input_img)[0] for encoder in stn.encoders]
 
@@ -38,20 +38,18 @@ def test_autoencoder(autoencoder_ids, model_save_path):
 
             img = get_images(input_img_path)
 
-            for autoencoder_id in autoencoder_ids:
+            for autoencoder_id, output_img in zip(autoencoder_levels, output_imgs):
 
-                index = 5 - autoencoder_id
-                out = sess.run(output_imgs[index], feed_dict={input_img: img})
+                out = sess.run(output_img, feed_dict={input_img: img})
 
-                prefix = '%d-' % autoencoder_id
-                save_single_image(out[0], input_img_path, OUTPUT_DIR, prefix=prefix)
+                save_single_image(out[0], input_img_path, OUTPUT_DIR, prefix=autoencoder_id + '-')
 
 
 def main():
-    autoencoder_ids = list(range(1, 6))
+    autoencoder_levels = [1, 2, 3, 4, 5]
     model_save_path = MODEL_SAVE_PATH + '-done'
 
-    test_autoencoder(autoencoder_ids, model_save_path)
+    test_autoencoder(autoencoder_levels, model_save_path)
 
     print('\n>>>>> Testing all done!\n')
 

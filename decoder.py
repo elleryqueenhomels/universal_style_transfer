@@ -62,7 +62,7 @@ class Decoder(object):
             kernel = tf.get_variable(initializer=tf.contrib.layers.xavier_initializer(), 
                 shape=shape, name='kernel', trainable=True)
             bias = tf.get_variable(initializer=tf.zeros([output_filters]), 
-                shape=[output_filters], name='bias', trainable=True)
+                name='bias', trainable=True)
             return (kernel, bias)
 
     def decode(self, image):

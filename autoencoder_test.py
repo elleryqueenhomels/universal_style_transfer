@@ -42,7 +42,7 @@ def test_autoencoder(autoencoder_levels, model_save_path):
 
                 out = sess.run(output_img, feed_dict={input_img: img})
 
-                save_single_image(out[0], input_img_path, OUTPUT_DIR, prefix=autoencoder_id + '-')
+                save_single_image(out[0], input_img_path, OUTPUT_DIR, prefix=str(autoencoder_id) + '-')
 
 
 def main():

@@ -58,8 +58,8 @@ class Encoder(object):
         # switch RGB to BGR
         out = tf.reverse(out, axis=[-1])
 
-        # preprocess(centralize) image
-        out = preprocess(out)
+        # normalization
+        out /= 255.0
 
         features = []
 

@@ -84,6 +84,9 @@ class Decoder(object):
         # switch BGR back to RGB
         out = tf.reverse(out, axis=[-1])
 
+        # map (0, 1) back to (0, 255)
+        out *= 255.0
+
         # clip to 0..255
         out = tf.clip_by_value(out, 0.0, 255.0)
 

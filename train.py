@@ -25,7 +25,9 @@ LR_DECAY_RATE = 5e-5
 DECAY_STEPS = 1.0
 
 
-def train(training_imgs_paths, encoder_weights_path, model_save_path, debug=False, logging_period=100):
+def train(training_imgs_paths, encoder_weights_path, model_save_path, 
+    autoencoder_levels=None, debug=False, logging_period=100):
+
     if debug:
         from datetime import datetime
         start_time = datetime.now()
@@ -44,7 +46,7 @@ def train(training_imgs_paths, encoder_weights_path, model_save_path, debug=Fals
     with tf.Graph().as_default(), tf.Session() as sess:
 
         # create encoders & decoders through StyleTransferNet
-        stn = StyleTransferNet(encoder_weights_path)
+        stn = StyleTransferNet(encoder_weights_path, autoencoder_levels)
 
         # initialize all the variables
         sess.run(tf.global_variables_initializer())
@@ -54,7 +56,7 @@ def train(training_imgs_paths, encoder_weights_path, model_save_path, debug=Fals
 
         for index, (encoder, decoder) in enumerate(zip(stn.encoders, stn.decoders)):
 
-            autoencoder_id = 5 - index
+            autoencoder_id = stn.autoencoder_levels[index]
 
             input_imgs = tf.placeholder(tf.float32, shape=INPUT_SHAPE, name='input_imgs_%d' % autoencoder_id)
 

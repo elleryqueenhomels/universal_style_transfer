@@ -1,18 +1,21 @@
 # Use style image to stylize content image
 
+import numpy as np
 import tensorflow as tf
 
 from style_transfer_net import StyleTransferNet
 from utils import get_images, save_images
 
 
-def stylize(contents_path, styles_path, output_dir, encoder_path, 
-    model_path, style_ratio=0.6, repeat_pipeline=1):
+def stylize(contents_path, styles_path, output_dir, encoder_path, model_path, 
+    style_ratio=0.6, repeat_pipeline=1, autoencoder_levels=None):
 
     if isinstance(contents_path, str):
         contents_path = [contents_path]
     if isinstance(styles_path, str):
         styles_path = [styles_path]
+
+    style_ratio = np.clip(style_ratio, 0, 1)
 
     with tf.Graph().as_default(), tf.Session() as sess:
         # build the dataflow graph
@@ -21,7 +24,7 @@ def stylize(contents_path, styles_path, output_dir, encoder_path,
         style   = tf.placeholder(
             tf.float32, shape=(1, None, None, 3), name='style_input')
 
-        stn = StyleTransferNet(encoder_path)
+        stn = StyleTransferNet(encoder_path, autoencoder_levels)
 
         output_image = stn.transform(content, style, style_ratio, repeat_pipeline)
 

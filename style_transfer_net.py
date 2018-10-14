@@ -58,11 +58,21 @@ AUTOENCODERS = (
 
 class StyleTransferNet(object):
 
-    def __init__(self, encoder_weights_path):
+    def __init__(self, encoder_weights_path, autoencoder_levels=None):
+        num_levels = len(AUTOENCODERS)
+        
+        if autoencoder_levels is None:
+            autoencoder_levels = list(range(num_levels, 0, -1))
+        self.autoencoder_levels = autoencoder_levels
+
         self.encoders = []
         self.decoders = []
 
-        for autoencoder in AUTOENCODERS:
+        autoencoders = []
+        for level in autoencoder_levels:
+            autoencoders.append(AUTOENCODERS[num_levels - level])
+
+        for autoencoder in autoencoders:
             self.encoders.append(Encoder(encoder_weights_path, autoencoder[0]))
             self.decoders.append(Decoder(autoencoder[1]))
 

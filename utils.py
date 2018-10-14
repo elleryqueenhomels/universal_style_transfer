@@ -100,7 +100,7 @@ def save_single_image(data, input_path, output_dir, prefix=None, suffix='-recons
     if suffix != None:
         name = name + suffix
 
-    output_path = join(output_dir, '%s.%s' % (name, ext))
+    output_path = join(output_dir, '%s%s' % (name, ext))
 
     imsave(output_path, data)
 

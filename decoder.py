@@ -78,9 +78,6 @@ class Decoder(object):
             if i in self.upsample_indices:
                 out = upsample(out)
 
-        # deprocess image
-        out = deprocess(out)
-
         # switch BGR back to RGB
         out = tf.reverse(out, axis=[-1])
 
